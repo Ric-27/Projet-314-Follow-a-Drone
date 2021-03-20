@@ -1,0 +1,23 @@
+<launch>
+    <!--<include 
+    file="$(find tello_driver)/launch/tello_node.launch"/> -->
+    <include 
+    file="$(find projet)/launch/ar_tracker.launch"/>
+    <include 
+    file="$(find projet)/launch/track_to_vel_service.launch"/>
+
+    <node 
+    name="tello_tracker" 
+    pkg="projet" 
+    type="tello_tracker.py" 
+    output="screen">
+    </node>
+
+    <!--<node
+    name="rviz"
+    pkg="rviz"
+    type="rviz"
+    args="-d $(find projet)/rviz/config.rviz"
+    output="screen">
+    </node>-->
+</launch>
