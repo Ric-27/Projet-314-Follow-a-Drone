@@ -5,7 +5,7 @@ from geometry_msgs.msg import Twist
 from projet.srv import CustomService, CustomServiceRequest
 
 rospy.init_node('tello_tracker_node')
-print("Tello Tracker Projet")
+#print("Tello Tracker Projet")
 
 pub_takeoff = rospy.Publisher('/tello/takeoff', Empty, queue_size=1)
 pub_land = rospy.Publisher('/tello/land', Empty, queue_size=1)
@@ -28,7 +28,7 @@ while i < 3:
 rate = rospy.Rate(100)
 while not rospy.is_shutdown():
     result = vel_service(call)
-    print(result)
+    #print(result)
     vel_msg = result.twist
     pub_vel.publish(vel_msg)
     rate.sleep()

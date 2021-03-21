@@ -13,11 +13,11 @@
     output="screen">
     </node>
 
-    <!--<node
+    <node
     name="rviz"
     pkg="rviz"
     type="rviz"
     args="-d $(find projet)/rviz/config.rviz"
     output="screen">
-    </node>-->
+    </node>
 </launch>

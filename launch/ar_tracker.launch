@@ -1,7 +1,7 @@
 <launch>
 
-   	<node pkg="tf" type="static_transform_publisher" name="tello_broadcaster" args="0 0 1 0 0 0 world tello 100" />
-	<node pkg="tf" type="static_transform_publisher" name="camera_front_broadcaster" args="1 0 0 0 0 0 tello camera_front 100" />
+   	<node pkg="tf" type="static_transform_publisher" name="tello_broadcaster" args="0 0 1 0 0 0 world /tello/camera_front 100" />
+	<!--<node pkg="tf" type="static_transform_publisher" name="camera_front_broadcaster" args="1 0 0 0 0 0 tello camera_front 100" />-->
 
 	<arg name="marker_size" default="9" />
 	<arg name="max_new_marker_error" default="0.08" />
