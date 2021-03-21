@@ -5,10 +5,10 @@ from geometry_msgs.msg import Twist
 from projet.srv import CustomService, CustomServiceRequest
 
 rospy.init_node('tello_tracker_node')
-#print("Tello Tracker Projet")
+print("Tello Tracker Projet")
 
 pub_takeoff = rospy.Publisher('/tello/takeoff', Empty, queue_size=1)
-pub_land = rospy.Publisher('/tello/land', Empty, queue_size=1)
+#pub_land = rospy.Publisher('/tello/land', Empty, queue_size=1)
 pub_vel = rospy.Publisher('/tello/cmd_vel', Twist, queue_size=1)
 
 empty_msg = Empty()
