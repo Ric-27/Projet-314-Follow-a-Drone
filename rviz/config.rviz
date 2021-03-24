@@ -58,7 +58,7 @@ Visualization Manager:
       Marker Topic: /visualization_marker
       Name: Marker
       Namespaces:
-        basic_shapes: true
+        {}
       Queue Size: 10
       Value: true
     - Class: rviz/Camera
@@ -142,5 +142,5 @@ Window Geometry:
   Views:
     collapsed: true
   Width: 1920
-  X: 1920
+  X: 0
   Y: 27

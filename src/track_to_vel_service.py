@@ -24,9 +24,6 @@ class Service:
 
     def CB_function(self,request):
 
-        if self.tracking:
-            #print("TRACKING MARKER")
-            self.tracking = False
         self.my_response = CustomServiceResponse()
         self.my_response.twist.linear.x = 0
         self.my_response.twist.linear.y = 0
@@ -34,24 +31,30 @@ class Service:
         self.my_response.twist.angular.x = 0
         self.my_response.twist.angular.y = 0
         self.my_response.twist.angular.z = 0
-        quaternion = (self.q_x,self.q_y,self.q_z,self.q_w)
-        euler = euler_from_quaternion(quaternion)
+        self.my_response.tracking = False
+        
+        if self.tracking:
+            self.tracking = False
+            self.my_response.tracking = True
+            
+            quaternion = (self.q_x,self.q_y,self.q_z,self.q_w)
+            euler = euler_from_quaternion(quaternion)
 
-        l_x = self.p_x * WEIGHT_LATERAL #side
-        l_y = -self.p_y* WEIGHT_ALTITUDE #altitude
-        l_z = self.p_z * WEIGHT_DISTANCE #distance to marker
+            l_x = self.p_x * WEIGHT_LATERAL #side
+            l_y = -self.p_y* WEIGHT_ALTITUDE #altitude
+            l_z = self.p_z * WEIGHT_DISTANCE #distance to marker
 
-        a_z = euler[1] #rotation
+            a_z = euler[1] #rotation
 
-        if abs(l_x) > LINEAR_THRESHOLD:
-            self.my_response.twist.linear.x = l_x
-        if abs(l_z) > LINEAR_THRESHOLD:
-            self.my_response.twist.linear.y = l_z - MIN_DISTANCE
-        if abs(l_y) > LINEAR_THRESHOLD:
-            self.my_response.twist.linear.z = l_y + MIN_HEIGHT
-        if abs(euler[1]) > ANGULAR_THRESHOLD:
-            self.my_response.twist.angular.z = a_z * WEIGHT_ANGULAR_TURN
-            self.my_response.twist.linear.x += -a_z* WEIGHT_ANGULAR_LATERAL
+            if abs(l_x) > LINEAR_THRESHOLD:
+                self.my_response.twist.linear.x = l_x
+            if abs(l_z) > LINEAR_THRESHOLD:
+                self.my_response.twist.linear.y = l_z - MIN_DISTANCE
+            if abs(l_y) > LINEAR_THRESHOLD:
+                self.my_response.twist.linear.z = l_y + MIN_HEIGHT
+            if abs(euler[1]) > ANGULAR_THRESHOLD:
+                self.my_response.twist.angular.z = a_z * WEIGHT_ANGULAR_TURN
+                self.my_response.twist.linear.x += -a_z* WEIGHT_ANGULAR_LATERAL
 
         return self.my_response
 
