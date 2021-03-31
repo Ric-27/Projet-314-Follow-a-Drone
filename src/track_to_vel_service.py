@@ -46,15 +46,19 @@ class Service:
 
             a_z = euler[1] #rotation
 
-            if abs(l_x) > LINEAR_THRESHOLD:
-                self.my_response.twist.linear.x = l_x
-            if abs(l_z) > LINEAR_THRESHOLD:
-                self.my_response.twist.linear.y = l_z - MIN_DISTANCE
-            if abs(l_y) > LINEAR_THRESHOLD:
-                self.my_response.twist.linear.z = l_y + MIN_HEIGHT
-            if abs(euler[1]) > ANGULAR_THRESHOLD:
-                self.my_response.twist.angular.z = a_z * WEIGHT_ANGULAR_TURN
-                self.my_response.twist.linear.x += -a_z* WEIGHT_ANGULAR_LATERAL
+            #if abs(l_x) > LINEAR_THRESHOLD:
+            #    self.my_response.twist.linear.x = l_x
+            #if abs(l_z) > LINEAR_THRESHOLD:
+            #    self.my_response.twist.linear.y = l_z - MIN_DISTANCE
+            #if abs(l_y) > LINEAR_THRESHOLD:
+            #    self.my_response.twist.linear.z = l_y + MIN_HEIGHT
+            #if abs(euler[1]) > ANGULAR_THRESHOLD:
+            #    self.my_response.twist.angular.z = a_z * WEIGHT_ANGULAR_TURN
+            #    self.my_response.twist.linear.x += -a_z* WEIGHT_ANGULAR_LATERAL
+
+            self.my_response.twist.linear.x = self.p_x
+            self.my_response.twist.linear.y = self.p_z
+            self.my_response.twist.linear.z = -self.p_y
 
         return self.my_response
 
