@@ -3,4 +3,5 @@
 #result definition
 geometry_msgs/Twist tracker
 geometry_msgs/Twist odom
+geometry_msgs/Pose pose
 bool tracking

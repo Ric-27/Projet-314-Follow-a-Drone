@@ -1,6 +1,8 @@
 #! /usr/bin/env python
 import rospy
 from geometry_msgs.msg import Twist
+from geometry_msgs.msg import Pose
+from geometry_msgs.msg import Point
 from nav_msgs.msg import Odometry
 from projet.srv import CustomService, CustomServiceResponse
 from ar_track_alvar_msgs.msg import AlvarMarkers
@@ -22,6 +24,7 @@ class Service:
         self.tracking = False
 
         self.odom = Twist()
+        self.pose = Pose()
         print("service server created")
 
     def CB_function(self,request):
@@ -34,6 +37,7 @@ class Service:
         self.my_response.tracker.angular.z = 0
         self.my_response.tracking = False
         self.my_response.odom = self.odom
+        self.my_response.pose = self.pose
         
         if self.tracking:
             self.tracking = False
@@ -85,6 +89,7 @@ class Service:
     
     def callback_odom(self,msg):
         self.odom = msg.twist.twist
+        self.pose = msg.pose.pose
 
 rospy.init_node('subscription_service_node')
 ss = Service()
