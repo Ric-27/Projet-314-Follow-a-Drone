@@ -20,7 +20,7 @@ rospy.wait_for_service('/subscription_service')
 service = rospy.ServiceProxy('/subscription_service', CustomService)
 call = CustomServiceRequest()
 
-sample_time = 0.3 # time in seconds between two samples of positions that we save
+sample_time = 1 # time in seconds between two samples of positions that we save
 work_rate = 10
 seconds_to_land = 10
 seconds_to_takeoff = 10
@@ -74,7 +74,9 @@ while not rospy.is_shutdown():
 
     pos_msg = result.tracker
 
-    
+    if not in_air and not result.tracking:
+        internal_time1 = rospy.get_rostime()
+
     if in_air and result.tracking:
         internal_time1 = rospy.get_rostime()
 
@@ -117,9 +119,10 @@ while not rospy.is_shutdown():
             internal_time_sample_rate = rospy.get_rostime()
             positions.pop(0)
 
-        if rospy.get_rostime().secs > date_velocity_queue[0][1]: 
+        if len(date_velocity_queue) > 0 and rospy.get_rostime().secs > date_velocity_queue[0][1]: 
             #therefore, we should send the velocity command, because we are approximately in the required position
             pub_vel.publish(date_velocity_queue.pop()[0])
+        
 
 
 
