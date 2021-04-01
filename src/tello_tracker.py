@@ -3,6 +3,7 @@ import rospy
 from std_msgs.msg import Empty
 from geometry_msgs.msg import Twist
 from projet.srv import CustomService, CustomServiceRequest
+import math
 
 rospy.init_node('tello_tracker_node')
 
@@ -22,7 +23,7 @@ call = CustomServiceRequest()
 sample_time = 0.3 # time in seconds between two samples of positions that we save
 work_rate = 10
 seconds_to_land = 10
-seconds_to_takeoff = 5
+seconds_to_takeoff = 10
 in_air = False
 count = 0
 
@@ -44,7 +45,8 @@ rate = rospy.Rate(work_rate)
 
 while not rospy.is_shutdown():
     result = service(call)
-    print(result)
+    #print(internal_time1)
+    #print(rospy.get_rostime().secs)
     if not in_air and result.tracking and (rospy.get_rostime().secs - internal_time1.secs) >= seconds_to_takeoff:
         print("Taking Off")
         for i in range(5):
@@ -52,7 +54,8 @@ while not rospy.is_shutdown():
             rospy.sleep(1)
         internal_time1 = rospy.get_rostime()
         in_air = True
-        rospy.sleep(3)
+        rospy.sleep(1)
+        print("In air")
     if in_air and not result.tracking and (rospy.get_rostime().secs - internal_time1.secs) >= seconds_to_land:
         print("Landing")
         for i in range(5):
@@ -103,8 +106,8 @@ while not rospy.is_shutdown():
 
             #calculate estimated time to target
             #we suppose that
-            distance_to_me = sqrt((positions[1].linear.x)**2 + (positions[1].linear.y)**2 + (positions[1].linear.z)**2)
-            my_vel_norm = sqrt((my_vel.linear.x)**2 + (my_vel.linear.y)**2 + (my_vel.linear.z)**2)
+            distance_to_me = math.sqrt((positions[1].linear.x)**2 + (positions[1].linear.y)**2 + (positions[1].linear.z)**2)
+            my_vel_norm = math.sqrt((my_vel.linear.x)**2 + (my_vel.linear.y)**2 + (my_vel.linear.z)**2)
             approx_time_to_target = distance_to_me / my_vel_norm
 
             date_velocity_queue.append((vel_msg,rospy.get_rostime().secs + approx_time_to_target))

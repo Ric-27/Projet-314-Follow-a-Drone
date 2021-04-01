@@ -1,8 +1,8 @@
 <launch>
     <node 
     pkg="projet" 
-    type="track_to_vel_service.py" 
-    name="track_to_vel_service_node" 
+    type="subscription_service.py" 
+    name="subscription_service_node" 
     output="screen">
     </node>
 </launch>
