@@ -27,6 +27,8 @@ seconds_to_takeoff = 10
 in_air = False
 count = 0
 
+epsilon = 0.02
+
 internal_time1 = rospy.get_rostime()
 
 internal_time_sample_rate = rospy.get_rostime()
@@ -92,6 +94,7 @@ while not rospy.is_shutdown():
             ## add to the date_velocity_queue
             date_velocity_queue.append((vel_msg,rospy.get_rostime().secs)) #stocker vel_msg, date 
             internal_time_sample_rate = rospy.get_rostime()
+            my_prev_vel_norm = math.sqrt((vel_msg.linear.x)**2 + (vel_msg.linear.y)**2 + (vel_msg.linear.z)**2)
 
         
         if (rospy.get_rostime().secs - internal_time_sample_rate.secs) > sample_time:
@@ -110,7 +113,13 @@ while not rospy.is_shutdown():
             #we suppose that
             distance_to_me = math.sqrt((positions[1].linear.x)**2 + (positions[1].linear.y)**2 + (positions[1].linear.z)**2)
             my_vel_norm = math.sqrt((my_vel.linear.x)**2 + (my_vel.linear.y)**2 + (my_vel.linear.z)**2)
-            approx_time_to_target = distance_to_me / my_vel_norm
+
+
+            if (my_vel_norm < epsilon):
+                approx_time_to_target = distance_to_me / my_prev_vel_norm
+            else:
+                approx_time_to_target = distance_to_me / my_vel_norm
+                my_prev_vel_norm = my_vel_norm
 
             date_velocity_queue.append((vel_msg,rospy.get_rostime().secs + approx_time_to_target))
             #print(date_velocity_queue)
