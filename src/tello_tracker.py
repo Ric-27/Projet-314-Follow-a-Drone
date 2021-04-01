@@ -111,6 +111,9 @@ while not rospy.is_shutdown():
             approx_time_to_target = distance_to_me / my_vel_norm
 
             date_velocity_queue.append((vel_msg,rospy.get_rostime().secs + approx_time_to_target))
+            #print(date_velocity_queue)
+            #print(date_velocity_queue[0])
+            print(date_velocity_queue[0][1])
             internal_time_sample_rate = rospy.get_rostime()
             positions.pop(0)
 
