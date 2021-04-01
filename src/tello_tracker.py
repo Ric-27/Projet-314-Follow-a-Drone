@@ -3,7 +3,6 @@ import rospy
 from std_msgs.msg import Empty
 from geometry_msgs.msg import Twist
 from projet.srv import CustomService, CustomServiceRequest
-import time
 
 rospy.init_node('tello_tracker_node')
 
@@ -16,8 +15,8 @@ vel_msg = Twist( )# velocity command
 pos_msg = Twist() # tracker position
 my_vel = Twist() # my velocity
 
-rospy.wait_for_service('/track_to_vel_service')
-vel_service = rospy.ServiceProxy('/track_to_vel_service', CustomService)
+rospy.wait_for_service('/subscription_service')
+service = rospy.ServiceProxy('/subscription_service', CustomService)
 call = CustomServiceRequest()
 
 sample_time = 0.3 # time in seconds between two samples of positions that we save
@@ -44,20 +43,21 @@ print("Tello Tracker Initiated")
 rate = rospy.Rate(work_rate)
 
 while not rospy.is_shutdown():
-    result = vel_service(call)   
+    result = service(call)
+    print(result)
     if not in_air and result.tracking and (rospy.get_rostime().secs - internal_time1.secs) >= seconds_to_takeoff:
         print("Taking Off")
         for i in range(5):
             pub_takeoff.publish(empty_msg)
-            time.sleep(1)
+            rospy.sleep(1)
         internal_time1 = rospy.get_rostime()
         in_air = True
-        time.sleep(3)
+        rospy.sleep(3)
     if in_air and not result.tracking and (rospy.get_rostime().secs - internal_time1.secs) >= seconds_to_land:
         print("Landing")
         for i in range(5):
             pub_land.publish(empty_msg)
-            time.sleep(1)
+            rospy.sleep(1)
         internal_time1 = rospy.get_rostime()
         in_air = False
 
@@ -69,7 +69,7 @@ while not rospy.is_shutdown():
     #if count%work_rate == 0 and count != 0:
     #        print("time elapsed counting: {}".format(count/work_rate))
 
-    pos_msg = result.twist
+    pos_msg = result.tracker
 
     
     if in_air and result.tracking:
@@ -95,7 +95,7 @@ while not rospy.is_shutdown():
 
             positions.append(pos_msg) #save position sample
 
-            my_vel = Twist() # get it from the topic /tello/odom, but for now assume we did /tello/odom/
+            my_vel = result.odom # get it from the topic /tello/odom, but for now assume we did /tello/odom/
             delta_t = (rospy.get_rostime().secs - internal_time_sample_rate.secs)
             vel_msg.linear.x = my_vel.linear.x + (positions[1].linear.x - positions[0].linear.x)/delta_t
             vel_msg.linear.y = my_vel.linear.y + (positions[1].linear.y - positions[0].linear.y)/delta_t

@@ -4,7 +4,7 @@
     <include 
     file="$(find projet)/launch/ar_tracker.launch"/>
     <include 
-    file="$(find projet)/launch/track_to_vel_service.launch"/>
+    file="$(find projet)/launch/subscription_service.launch"/>
 
     <node 
     name="tello_tracker" 
